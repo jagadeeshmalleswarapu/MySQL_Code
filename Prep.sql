@@ -354,7 +354,94 @@ FROM
 GROUP BY author_fname , author_lname;
 -- -------------------------------------------------------------
 
+-- Constraints & ALT TABLE -------------------------------------------------
+-- UNIQUE
+use mixed;
+CREATE table contacts(
+name varchar(50) not null,
+phoneNumber varchar(10) not null unique
+);
 
+insert into contacts (name, phoneNumber) values ('Jagadeesh','8745632147');
+insert into contacts (name, phoneNumber) values ('JagadeeshM','8745632147');
+select * from contacts;
+
+-- CHECK
+CREATE table Users(
+name varchar(25) not null,
+age int check (age>0)
+);
+insert into Users (name,age) values ('JagadeeshM',22);
+insert into Users (name,age) values ('Malleswarapu',45);
+insert into Users (name,age) values ('Neg',-55);
+
+
+CREATE TABLE palindromes (
+    word VARCHAR(50) CHECK (REVERSE(word) = word)
+);
+insert into palindromes (word) values ('ollo');
+select * from palindromes;
+
+CREATE TABLE user2 (
+    name VARCHAR(50) NOT NULL,
+    age INT,
+    CONSTRAINT VOTE_RIGHT CHECK (age >= 18) -- VOTE_RIGHT is a custom error msg
+);
+insert into user2 (name,age) value ('Narasimha Murthy', 17);
+
+-- Multiple CONSTRAINTS -- -------------------------------------
+CREATE TABLE supplier (
+    supplier_id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(10) NOT NULL UNIQUE,
+    address VARCHAR(200) NOT NULL,
+    PRIMARY KEY (supplier_id),
+    CONSTRAINT NAME_ADDRESS UNIQUE (name , address)
+);
+
+insert into supplier (name,phone,address) value ('M.Jagadeesh','9788654412','11/23 first street,hyderabad');
+insert into supplier (name,phone,address) value ('M.Jagadeesh','9788654412','11/23 first street,hyderabad');
+
+select * from supplier;
+-- --------------------------------------------------------------------------------
+
+-- ALTER -- --------------------------------------------------
+ALTER TABLE supplier
+add column city varchar(50) default 'NA';
+
+ALTER TABLE supplier
+add column STATE varchar(50) NOT NULL;
+
+ALTER TABLE supplier
+add column pin_code int not null;
+-- drop -------------------
+ALTER TABLE supplier
+drop column city;
+
+select * from supplier;
+-- RENAME -----------------
+create TABLE campus ( name varchar(50));
+insert into campus (name) values ('satish');
+RENAME TABLE campus to company; -- renaming from campus to company
+select * from company;
+ALTER TABLE company rename to campus; -- renaming back to campus
+select * from campus;
+
+-- renaming columns --------------------
+ALTER TABLE supplier 
+rename column pin_code to zipCode;
+
+select * from supplier;
+-- Changing only data type ------------------
+ALTER TABLE supplier
+MODIFY name varchar(200) default 'Unknow';
+
+desc supplier;
+-- changing both datatype and column name -------
+ALTER TABLE supplier
+CHANGE phone phone_Number varchar(50) default '9999999999';
+
+desc supplier;
 
 
 
