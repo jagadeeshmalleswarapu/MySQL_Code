@@ -444,6 +444,160 @@ CHANGE phone phone_Number varchar(50) default '9999999999';
 desc supplier;
 
 
+-- ****************************One to Many & Joins *************************************************
+-- 1:Many ----------------------
+use mixed;
+drop table customer;
+create table customers(
+customer_id int not null auto_increment primary key,
+first_name varchar(100) not null,
+last_name varchar(100) not null,
+email varchar(100) not null
+);
+
+CREATE TABLE orders (
+    order_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_date DATE,
+    amount DECIMAL(8 , 2 ),
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
+);
+
+INSERT INTO customers (first_name, last_name, email) 
+VALUES ('Boy', 'George', 'george@gmail.com'),
+       ('George', 'Michael', 'gm@gmail.com'),
+       ('David', 'Bowie', 'david@gmail.com'),
+       ('Blue', 'Steele', 'blue@gmail.com'),
+       ('Bette', 'Davis', 'bette@aol.com');
+ 
+ select * from customers;
+       
+INSERT INTO orders (order_date, amount, customer_id)
+VALUES ('2016-02-10', 99.99, 1),
+       ('2017-11-11', 35.50, 1),
+       ('2014-12-12', 800.67, 2),
+       ('2015-01-03', 12.50, 2),
+       ('1999-04-11', 450.25, 5);
+
+select * from orders;
+select * from orders where customer_id = (select customer_id from customers where last_name='davis');
+select * from customers, orders;       -- cross join
+
+-- Inner join -------------------- select all records from A and B where the join condition met 
+SELECT 
+    *
+FROM
+    customers
+        JOIN
+    orders ON customers.customer_id = orders.customer_id;
+    
+
+SELECT 
+    first_name, last_name, email, order_date, amount
+FROM
+    customers
+        JOIN
+    orders ON customers.customer_id = orders.customer_id;
+
+SELECT 
+    first_name, last_name, email, count(*) as Quantity,SUM(amount) AS Total
+FROM 
+    customers
+        JOIN
+    orders ON customers.customer_id = orders.customer_id
+GROUP BY customers.first_name , customers.last_name , customers.email;
+
+-- LEFT JOIN -------------------------
+SELECT 
+    first_name, last_name, email, order_date, amount
+FROM
+    customers
+        LEFT JOIN
+    orders ON customers.customer_id = orders.customer_id;
+    
+
+SELECT first_name, last_name, 
+case 
+when sum(amount) is null then 0
+else sum(amount)
+end as Total,
+case
+when avg(amount) is null then 0 
+else avg(amount) 
+end as Average
+ from customers 
+left join orders on customers.customer_id = orders.customer_id 
+group by first_name,last_name;    
+
+SELECT 
+    first_name,
+    last_name,
+    IFNULL(SUM(amount), 0) AS Total,
+    IFNULL(AVG(amount), 0) AS Average
+FROM
+    customers
+        LEFT JOIN
+    orders ON customers.customer_id = orders.customer_id
+GROUP BY first_name , last_name; 
+
+-- RIGHT JOIN ---------------------------------------
+INSERT INTO orders (order_date, amount) values(curdate(),582);
+
+select * from orders;
+
+select first_name, last_name, order_date, amount from customers cs 
+right join orders os on cs.customer_id=os.customer_id;
+
+select IFNULL(first_name,'-'), ifnull(last_name,'-'), order_date, amount from customers cs 
+right join orders os on cs.customer_id=os.customer_id;
+
+-- ON DELETE CASCADE -------------
+drop table orders;
+drop table customers;
+
+create table customers(
+customer_id int not null auto_increment primary key,
+first_name varchar(100) not null,
+last_name varchar(100) not null,
+email varchar(100) not null
+);
+
+CREATE TABLE orders (
+    order_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    order_date DATE,
+    amount DECIMAL(8 , 2 ),
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id) ON DELETE CASCADE
+);
+
+INSERT INTO customers (first_name, last_name, email) 
+VALUES ('Boy', 'George', 'george@gmail.com'),
+       ('George', 'Michael', 'gm@gmail.com'),
+       ('David', 'Bowie', 'david@gmail.com'),
+       ('Blue', 'Steele', 'blue@gmail.com'),
+       ('Bette', 'Davis', 'bette@aol.com');
+       
+INSERT INTO orders (order_date, amount, customer_id)
+VALUES ('2016-02-10', 99.99, 1),
+       ('2017-11-11', 35.50, 1),
+       ('2014-12-12', 800.67, 2),
+       ('2015-01-03', 12.50, 2),
+       ('1999-04-11', 450.25, 5);
+    
+select * from customers;
+SELECT * FROM ORDERS;
+
+DELETE FROM CUSTOMERS WHERE FIRST_NAME='boy';
+
+
+-- ***** Many to Many ***************************************************
+
+
+
+
+
+
+
 
 
 
