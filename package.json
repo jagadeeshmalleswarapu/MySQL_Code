@@ -1,0 +1,24 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "faker": "^5.5.3"
+  },
+  "name": "mysql",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jagadeeshmalleswarapu/MySQL_Code.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jagadeeshmalleswarapu/MySQL_Code/issues"
+  },
+  "homepage": "https://github.com/jagadeeshmalleswarapu/MySQL_Code#readme",
+  "description": ""
+}
